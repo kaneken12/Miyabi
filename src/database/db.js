@@ -135,3 +135,53 @@ class Database {
 }
 
 module.exports = Database;
+
+// Dans la classe Database, ajoutez ces méthodes :
+
+async getStats() {
+    try {
+        const messagesQuery = 'SELECT COUNT(*) as total_messages FROM messages';
+        const conversationsQuery = 'SELECT COUNT(*) as total_conversations FROM conversations';
+        
+        const messagesResult = await this.pool.query(messagesQuery);
+        const conversationsResult = await this.pool.query(conversationsQuery);
+        
+        return {
+            totalMessages: parseInt(messagesResult.rows[0].total_messages),
+            totalConversations: parseInt(conversationsResult.rows[0].total_conversations)
+        };
+    } catch (error) {
+        console.error('❌ Erreur récupération stats:', error);
+        return { totalMessages: 0, totalConversations: 0 };
+    }
+}
+
+async saveMoodChange(moodName, duration) {
+    const query = `
+        INSERT INTO mood_history (mood_name, duration)
+        VALUES ($1, $2)
+    `;
+
+    try {
+        await this.pool.query(query, [moodName, duration]);
+    } catch (error) {
+        console.error('❌ Erreur sauvegarde humeur:', error);
+    }
+}
+
+async getMoodHistory(limit = 10) {
+    const query = `
+        SELECT mood_name, duration, timestamp 
+        FROM mood_history 
+        ORDER BY timestamp DESC 
+        LIMIT $1
+    `;
+
+    try {
+        const result = await this.pool.query(query, [limit]);
+        return result.rows;
+    } catch (error) {
+        console.error('❌ Erreur récupération historique humeurs:', error);
+        return [];
+    }
+}
