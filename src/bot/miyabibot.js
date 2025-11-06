@@ -1,5 +1,6 @@
 const GeminiClient = require('../ai/geminiClient');
 const MoodSystem = require('./moodSystem');
+const MessageHandler = require('./messageHandler');
 const { shouldRespond, extractMessageText, isGroupMessage, getSenderName } = require('../utils/helpers');
 const StickerManager = require('../utils/stickers');
 
@@ -9,6 +10,7 @@ class MiyabiBot {
         this.gemini = new GeminiClient();
         this.moodSystem = new MoodSystem();
         this.stickerManager = new StickerManager();
+        this.messageHandler = new MessageHandler(this);
         this.name = process.env.BOT_NAME || 'Miyabi';
         this.creator = process.env.CREATOR_NUMBER || '+237692798136';
         
@@ -20,7 +22,11 @@ class MiyabiBot {
 
     async handleMessage(message, sock) {
         const messageText = extractMessageText(message);
-        if (!messageText) return;
+        if (!messageText) {
+            // Gérer les messages média sans texte
+            await this.messageHandler.handleMediaMessage(message, sock);
+            return;
+        }
 
         const chatId = message.key.remoteJid;
         const isGroup = isGroupMessage(message);
@@ -36,10 +42,8 @@ class MiyabiBot {
             timestamp: new Date(message.messageTimestamp * 1000)
         });
 
-        // Vérifier si Miyabi doit répondre
-        if (shouldRespond(messageText, this.name, message)) {
-            await this.generateAndSendResponse(message, sock);
-        }
+        // Traiter le message via le MessageHandler
+        await this.messageHandler.handleMessage(message, sock);
     }
 
     async generateAndSendResponse(message, sock) {
@@ -54,6 +58,9 @@ class MiyabiBot {
             
             // Obtenir l'humeur actuelle
             const currentMood = this.moodSystem.getCurrentMood();
+            
+            // Analyser le message pour les déclencheurs d'humeur
+            this.moodSystem.analyzeMessageForMoodTrigger(messageText);
             
             // Générer la réponse avec Gemini
             const response = await this.gemini.generateResponse({
