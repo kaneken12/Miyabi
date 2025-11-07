@@ -3,7 +3,11 @@
 
 <div align="center">
 
-![Miyabi Banner]<img src="https://files.catbox.moe/tu5jgh.jpg" alt="Miyabi" width="150" height="150" style="border-radius: 50%; border: 3px solid #FF69B4; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+![Miyabi Banner]
+
+<img src="https://files.catbox.moe/tu5jgh.jpg" alt="Miyabi" width="150" height="150" style="border-radius: 50%; border: 3px solid #FF69B4; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+
+
 **Une adolescente IA avec des humeurs changeantes qui vit dans WhatsApp**
 
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/fr/docs/Web/JavaScript)
