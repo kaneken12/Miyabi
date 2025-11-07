@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  miyabi-bot:
+    build: .
+    container_name: miyabi-whatsapp-bot
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./auth_info_baileys:/app/auth_info_baileys
+      - ./logs:/app/logs
+    depends_on:
+      - postgres
+    networks:
+      - miyabi-network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: miyabi-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - miyabi-network
+
+volumes:
+  postgres_data:
+  auth_info_baileys:
+
+networks:
+  miyabi-network:
+    driver: bridge
