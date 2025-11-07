@@ -39,7 +39,7 @@ class MoodSystem {
             {
                 name: 'neutral',
                 description: 'Calm and balanced',
-                intensity: 0.5,
+                intensity: 0.4,
                 duration: 15 * 60 * 1000,
                 triggers: ['normal conversation', 'information request']
             }
