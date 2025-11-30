@@ -5,7 +5,7 @@ const pino = require('pino');
 const path = require('path');
 const fs = require('fs');
 
-const MiyabiBot = require('./src/bot/MiyabiBot');
+const MiyabiBot = require('./src/bot/miyabibot');
 const Database = require('./src/database/db');
 
 class WhatsAppClient {
