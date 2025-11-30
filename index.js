@@ -6,7 +6,6 @@ const path = require('path');
 const fs = require('fs');
 
 const MiyabiBot = require('./src/bot/miyabibot');
-const MiyabiBot = require('./src/utils/helpers');
 const Database = require('./src/database/db');
 
 class WhatsAppClient {
